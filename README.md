@@ -1,5 +1,5 @@
-#HireMind
-
+**HireMind
+**
 AI-Powered Recruitment Screening & Talent Intelligence Platform
 Category: HR Tech / AI SaaS
 Difficulty: High
