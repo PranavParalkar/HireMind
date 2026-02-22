@@ -7,42 +7,76 @@ interface StatCardProps {
   title: string;
   value: string | number;
   trend: number;
+  trendLabel?: string;
   icon: React.ReactNode;
   color: string;
-  delay?: number;
 }
 
-export default function StatCard({ title, value, trend, icon, color, delay = 0 }: StatCardProps) {
+export default function StatCard({ title, value, trend, trendLabel, icon, color }: StatCardProps) {
   const isPositive = trend >= 0;
 
   return (
     <div
-      className="card p-5 relative overflow-hidden fade-in-up"
-      style={{ animationDelay: `${delay}s` }}
+      style={{
+        background: "var(--bg-card)",
+        border: "1px solid var(--border-color)",
+        borderRadius: 16,
+        padding: "22px 24px",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+        gap: 16,
+      }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[13px] text-text-secondary font-medium">{title}</span>
+      <div>
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center"
-          style={{ background: `${color}12`, color }}
+          style={{
+            fontSize: 32,
+            fontWeight: 800,
+            color: "var(--text-primary)",
+            lineHeight: 1,
+            letterSpacing: "-0.03em",
+          }}
         >
-          {icon}
+          {typeof value === "number" ? value.toLocaleString() : value}
+        </div>
+        <div style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6, fontWeight: 500 }}>
+          {title}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            fontSize: 12,
+            fontWeight: 600,
+            marginTop: 8,
+            color: isPositive ? "var(--accent-emerald)" : "var(--accent-rose)",
+          }}
+        >
+          {isPositive ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+          {isPositive ? "+" : ""}{trend}%
+          {trendLabel && (
+            <span style={{ color: "var(--text-muted)", fontWeight: 400, marginLeft: 2 }}>
+              {trendLabel}
+            </span>
+          )}
         </div>
       </div>
-      <div className="flex items-end justify-between">
-        <div>
-          <div className="text-[28px] font-bold text-text-primary leading-none tracking-tight">
-            {typeof value === "number" ? value.toLocaleString() : value}
-          </div>
-          <div
-            className={`flex items-center gap-1 text-[12px] font-medium mt-2 ${
-              isPositive ? "text-accent-emerald" : "text-accent-rose"
-            }`}
-          >
-            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            {isPositive ? "+" : ""}{trend}%
-          </div>
-        </div>
+      <div
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: 14,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          background: `${color}15`,
+          color,
+        }}
+      >
+        {icon}
       </div>
     </div>
   );

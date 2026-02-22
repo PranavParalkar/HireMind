@@ -49,7 +49,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       }}
     >
       {/* Logo */}
-      <div style={{ padding: collapsed ? "28px 16px 32px" : "28px 24px 32px" }}>
+      <div
+        style={{ padding: collapsed ? "28px 16px 32px" : "28px 24px 32px", cursor: "pointer" }}
+        onClick={onToggle}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           <div
             style={{
@@ -303,34 +306,83 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div style={{ padding: "0 16px 20px" }}>
-        <button
-          onClick={onToggle}
+      {/* User Profile */}
+      <div
+        style={{
+          paddingTop: 16,
+          paddingRight: collapsed ? 12 : 16,
+          paddingBottom: 16,
+          paddingLeft: collapsed ? 12 : 16,
+          borderTop: "1px solid var(--border-color)",
+          marginLeft: collapsed ? 8 : 16,
+          marginRight: collapsed ? 8 : 16,
+        }}
+      >
+        <Link
+          href="/profile"
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: "10px 0",
-            borderRadius: 12,
-            border: "none",
-            background: "transparent",
-            color: "var(--text-muted)",
+            gap: 12,
             cursor: "pointer",
-            transition: "all 0.15s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--bg-card)";
-            e.currentTarget.style.color = "var(--text-secondary)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--text-muted)";
+            textDecoration: "none",
           }}
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </button>
+          <div style={{ position: "relative", flexShrink: 0 }}>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: "50%",
+                background: "var(--accent-violet)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 700,
+                color: "#fff",
+              }}
+            >
+              CB
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background: "#34d399",
+                border: "2px solid var(--bg-secondary)",
+              }}
+            />
+          </div>
+          {!collapsed && (
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  lineHeight: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Carter Bergson
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 3, display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#34d399", flexShrink: 0 }} />
+                Premium
+              </div>
+            </div>
+          )}
+          {!collapsed && (
+            <ChevronRight size={14} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+          )}
+        </Link>
       </div>
     </aside>
   );
