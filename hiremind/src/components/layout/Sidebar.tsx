@@ -14,14 +14,19 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  HelpCircle,
+  LogOut,
 } from "lucide-react";
 
-const navItems = [
+const mainNav = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/candidates", label: "Candidates", icon: Users },
   { href: "/jobs", label: "Jobs", icon: Briefcase },
   { href: "/interviews", label: "Interviews", icon: Video },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
+];
+
+const otherNav = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -35,76 +40,296 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-bg-secondary border-r border-border-default flex flex-col z-50 transition-all duration-300 ${
-        collapsed ? "w-[68px]" : "w-[240px]"
+      className={`fixed left-0 top-0 h-screen flex flex-col z-50 transition-all duration-300 ${
+        collapsed ? "w-[76px]" : "w-[270px]"
       }`}
+      style={{
+        background: "var(--bg-secondary)",
+        borderRight: "1px solid var(--border-color)",
+      }}
     >
       {/* Logo */}
-      <div className="h-[72px] flex items-center px-5 border-b border-border-default">
-        <div className="flex items-center gap-3 min-w-0">
+      <div style={{ padding: collapsed ? "28px 16px 32px" : "28px 24px 32px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-accent-violet"
+            style={{
+              width: 42,
+              height: 42,
+              borderRadius: 14,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              background: "var(--accent-violet)",
+              boxShadow: "0 0 20px rgba(139, 92, 246, 0.25)",
+            }}
           >
-            <Sparkles size={16} className="text-white" />
+            <Sparkles size={20} color="#fff" />
           </div>
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-[15px] font-semibold text-text-primary tracking-tight leading-none">
+            <div>
+              <div
+                style={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1,
+                }}
+              >
                 HireMind
-              </span>
-              <span className="text-[10px] text-text-muted mt-0.5">Talent Intelligence</span>
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "var(--text-muted)",
+                  marginTop: 4,
+                }}
+              >
+                Talent Intelligence
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 py-5 px-3 space-y-0.5 overflow-y-auto">
-        {navItems.map((item) => {
+      {/* Separator */}
+      <div
+        style={{
+          margin: collapsed ? "0 12px 20px" : "0 20px 20px",
+          borderTop: "1px solid var(--border-color)",
+        }}
+      />
+
+      {/* Main Menu Label */}
+      {!collapsed && (
+        <div
+          style={{
+            padding: "0 28px",
+            marginBottom: 12,
+            fontSize: 10,
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--text-muted)",
+          }}
+        >
+          Main Menu
+        </div>
+      )}
+
+      {/* Main Navigation */}
+      <nav
+        style={{
+          padding: collapsed ? "0 10px" : "0 16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {mainNav.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150 group relative ${
-                isActive
-                  ? "bg-accent-violet-dim text-accent-violet-light"
-                  : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-              }`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: collapsed ? "14px 16px" : "14px 16px",
+                borderRadius: 14,
+                fontSize: 15,
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                background: isActive ? "var(--bg-elevated)" : "transparent",
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+                position: "relative",
+              }}
               title={collapsed ? item.label : undefined}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "var(--bg-card)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }
+              }}
             >
-              {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-accent-violet" />
-              )}
-              <Icon size={18} className="shrink-0" />
+              <Icon
+                size={22}
+                style={{
+                  flexShrink: 0,
+                  color: isActive ? "var(--accent-violet-light)" : undefined,
+                }}
+              />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      {/* Bottom section */}
-      <div className="px-3 pb-4 space-y-3">
-        {/* Upgrade CTA */}
-        {!collapsed && (
-          <div className="p-4 rounded-xl bg-accent-violet-dim border border-accent-violet/10">
-            <div className="flex items-center gap-2 mb-1.5">
-              <Zap size={14} className="text-accent-violet-light" />
-              <span className="text-xs font-semibold text-text-primary">Upgrade to Pro</span>
-            </div>
-            <p className="text-[11px] text-text-muted leading-relaxed">
-              Unlock AI interview analysis & advanced predictions.
-            </p>
-          </div>
-        )}
+      {/* Spacer */}
+      <div style={{ flex: 1 }} />
 
-        {/* Collapse toggle */}
+      {/* Upgrade CTA */}
+      {!collapsed && (
+        <div style={{ padding: "0 16px", marginBottom: 16 }}>
+          <div
+            style={{
+              padding: "20px 18px",
+              borderRadius: 16,
+              background: "var(--bg-elevated)",
+              border: "1px solid var(--border-color)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                marginBottom: 6,
+              }}
+            >
+              Upgrade to Pro
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                color: "var(--text-muted)",
+                lineHeight: 1.5,
+                marginBottom: 14,
+              }}
+            >
+              Get 1 month free and unlock all features
+            </div>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 0",
+                borderRadius: 10,
+                border: "none",
+                background: "var(--accent-violet)",
+                color: "#fff",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+            >
+              Upgrade
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Other section */}
+      {!collapsed && (
+        <div
+          style={{
+            margin: "0 20px 12px",
+            borderTop: "1px solid var(--border-color)",
+            paddingTop: 16,
+          }}
+        >
+          <div
+            style={{
+              padding: "0 8px",
+              marginBottom: 8,
+              fontSize: 10,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--text-muted)",
+            }}
+          >
+            Other
+          </div>
+        </div>
+      )}
+      <nav
+        style={{
+          padding: collapsed ? "0 10px" : "0 16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          marginBottom: 8,
+        }}
+      >
+        {otherNav.map((item) => {
+          const isActive = pathname === item.href;
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 16px",
+                borderRadius: 14,
+                fontSize: 14,
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                background: isActive ? "var(--bg-elevated)" : "transparent",
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+              }}
+              title={collapsed ? item.label : undefined}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "var(--bg-card)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }
+              }}
+            >
+              <Icon size={20} style={{ flexShrink: 0 }} />
+              {!collapsed && <span>{item.label}</span>}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Collapse toggle */}
+      <div style={{ padding: "0 16px 20px" }}>
         <button
           onClick={onToggle}
-          className="flex items-center justify-center w-full py-2 rounded-lg text-text-muted hover:text-text-secondary hover:bg-bg-card transition-colors"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            padding: "10px 0",
+            borderRadius: 12,
+            border: "none",
+            background: "transparent",
+            color: "var(--text-muted)",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--bg-card)";
+            e.currentTarget.style.color = "var(--text-secondary)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--text-muted)";
+          }}
         >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
     </aside>
