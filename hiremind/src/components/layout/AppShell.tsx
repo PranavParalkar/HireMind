@@ -11,16 +11,18 @@ export default function AppShell({ children }: AppShellProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className="flex min-h-screen" style={{ background: "var(--bg-primary)" }}>
       <Sidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
+      {/* Spacer that matches sidebar width — prevents overlap */}
       <div
-        className={`transition-all duration-300 min-h-screen ${
-          sidebarCollapsed ? "ml-[68px]" : "ml-[240px]"
-        }`}
-      >
+        className="shrink-0 transition-all duration-300"
+        style={{ width: sidebarCollapsed ? "76px" : "270px" }}
+      />
+      {/* Main content — takes remaining width */}
+      <div className="flex-1 min-w-0 min-h-screen">
         {children}
       </div>
     </div>
