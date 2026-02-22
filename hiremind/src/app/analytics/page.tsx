@@ -2,27 +2,8 @@
 
 import React from "react";
 import Header from "@/components/layout/Header";
-import {
-  Target,
-  TrendingUp,
-  Shield,
-  Award,
-} from "lucide-react";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { Target, TrendingUp, Shield, Award } from "lucide-react";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { analyticsData, diversityData, funnelData } from "@/lib/mockData";
 
 const accuracyMetrics = [
@@ -42,59 +23,50 @@ const predictionData = [
   { month: "Feb", predicted: 87, actual: 86 },
 ];
 
-const tooltipStyle = {
-  background: "#111116",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "10px",
-  color: "#f0f0f3",
-  fontSize: "12px",
-  boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-};
+const tt = { background: "#111116", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#f0f0f3", fontSize: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.4)" };
 
 export default function AnalyticsPage() {
   return (
     <>
       <Header title="Analytics" subtitle="AI-powered recruitment intelligence" />
-      <main className="p-8 space-y-8">
-        {/* Top metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <main style={{ padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+
+        {/* Top Metrics */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {[
-            { icon: <Target size={16} />, label: "Avg. Fit Score", value: "84.3%", color: "#8b5cf6" },
-            { icon: <TrendingUp size={16} />, label: "Hire Success Rate", value: "91.2%", color: "#34d399" },
-            { icon: <Shield size={16} />, label: "Bias-Free Score", value: "94.8%", color: "#22d3ee" },
-            { icon: <Award size={16} />, label: "Diversity Index", value: "78.5", color: "#fbbf24" },
-          ].map((item) => (
-            <div key={item.label} className="card p-5 flex items-center gap-4">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center"
-                style={{ background: `${item.color}12`, color: item.color }}
-              >
-                {item.icon}
+            { icon: <Target size={20} />, label: "Avg. Fit Score", value: "84.3%", color: "#8b5cf6" },
+            { icon: <TrendingUp size={20} />, label: "Hire Success Rate", value: "91.2%", color: "#34d399" },
+            { icon: <Shield size={20} />, label: "Bias-Free Score", value: "94.8%", color: "#22d3ee" },
+            { icon: <Award size={20} />, label: "Diversity Index", value: "78.5", color: "#fbbf24" },
+          ].map((m) => (
+            <div key={m.label} style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", background: `${m.color}15`, color: m.color, flexShrink: 0 }}>
+                {m.icon}
               </div>
               <div>
-                <div className="text-[22px] font-bold text-text-primary">{item.value}</div>
-                <div className="text-[11px] text-text-muted">{item.label}</div>
+                <div style={{ fontSize: 26, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{m.value}</div>
+                <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{m.label}</div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Charts Row 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Row 1 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Hiring Funnel */}
-          <div className="card p-6">
-            <h2 className="text-[15px] font-semibold text-text-primary mb-1">Hiring Funnel</h2>
-            <p className="text-[11px] text-text-muted mb-5">Conversion at each stage</p>
-            <div className="h-[260px]">
+          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>Hiring Funnel</h3>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 20 }}>Conversion at each stage</p>
+            <div style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={funnelData} barSize={36}>
+                <BarChart data={funnelData} barSize={40}>
                   <CartesianGrid stroke="rgba(255,255,255,0.03)" vertical={false} />
                   <XAxis dataKey="stage" tick={{ fill: "#8a8a98", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#55555f", fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={tooltipStyle} />
-                  <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                    {funnelData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Tooltip contentStyle={tt} />
+                  <Bar dataKey="count" radius={[8, 8, 0, 0]}>
+                    {funnelData.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -102,47 +74,32 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* Diversity Scoring */}
-          <div className="card p-6">
-            <h2 className="text-[15px] font-semibold text-text-primary mb-1">Diversity Scoring</h2>
-            <p className="text-[11px] text-text-muted mb-5">Current hiring diversity metrics</p>
-            <div className="flex items-center gap-6">
-              <div className="h-[220px] w-[220px] shrink-0">
+          {/* Diversity */}
+          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>Diversity Scoring</h3>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 20 }}>Current hiring diversity metrics</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+              <div style={{ width: 200, height: 200, flexShrink: 0 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie
-                      data={diversityData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={85}
-                      paddingAngle={3}
-                      dataKey="value"
-                      stroke="none"
-                    >
-                      {diversityData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
+                    <Pie data={diversityData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value" stroke="none">
+                      {diversityData.map((e, i) => <Cell key={i} fill={e.color} />)}
                     </Pie>
-                    <Tooltip contentStyle={tooltipStyle} />
+                    <Tooltip contentStyle={tt} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <div className="space-y-4 flex-1">
-                {diversityData.map((item) => (
-                  <div key={item.name}>
-                    <div className="flex items-center justify-between text-[12px] mb-1.5">
-                      <span className="flex items-center gap-2 text-text-secondary">
-                        <span className="w-2 h-2 rounded-full" style={{ background: item.color }} />
-                        {item.name}
+              <div style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1 }}>
+                {diversityData.map((d) => (
+                  <div key={d.name}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 6 }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text-secondary)" }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color }} />{d.name}
                       </span>
-                      <span className="font-semibold text-text-primary">{item.value}%</span>
+                      <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{d.value}%</span>
                     </div>
-                    <div className="h-1 bg-bg-elevated rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${item.value}%`, background: item.color }}
-                      />
+                    <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 100, overflow: "hidden" }}>
+                      <div style={{ height: "100%", borderRadius: 100, width: `${d.value}%`, background: d.color }} />
                     </div>
                   </div>
                 ))}
@@ -151,60 +108,40 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Charts Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Row 2 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Success Prediction */}
-          <div className="card p-6">
-            <h2 className="text-[15px] font-semibold text-text-primary mb-1">Success Prediction</h2>
-            <p className="text-[11px] text-text-muted mb-5">AI predicted vs actual performance</p>
-            <div className="h-[260px]">
+          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>Success Prediction</h3>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 20 }}>AI predicted vs actual performance</p>
+            <div style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={predictionData}>
                   <CartesianGrid stroke="rgba(255,255,255,0.03)" />
                   <XAxis dataKey="month" tick={{ fill: "#55555f", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#55555f", fontSize: 11 }} axisLine={false} tickLine={false} domain={[70, 100]} />
-                  <Tooltip contentStyle={tooltipStyle} />
-                  <Legend wrapperStyle={{ fontSize: "11px", color: "#8a8a98" }} />
-                  <Line
-                    type="monotone"
-                    dataKey="predicted"
-                    stroke="#8b5cf6"
-                    strokeWidth={2}
-                    dot={{ fill: "#8b5cf6", r: 3 }}
-                    activeDot={{ r: 5 }}
-                    name="Predicted"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="actual"
-                    stroke="#34d399"
-                    strokeWidth={2}
-                    dot={{ fill: "#34d399", r: 3 }}
-                    activeDot={{ r: 5 }}
-                    name="Actual"
-                    strokeDasharray="5 3"
-                  />
+                  <Tooltip contentStyle={tt} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: "#8a8a98" }} />
+                  <Line type="monotone" dataKey="predicted" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: "#8b5cf6", r: 4 }} name="Predicted" />
+                  <Line type="monotone" dataKey="actual" stroke="#34d399" strokeWidth={2} dot={{ fill: "#34d399", r: 4 }} strokeDasharray="5 3" name="Actual" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Accuracy Benchmarks */}
-          <div className="card p-6">
-            <h2 className="text-[15px] font-semibold text-text-primary mb-1">AI Accuracy</h2>
-            <p className="text-[11px] text-text-muted mb-6">Model performance benchmarks</p>
-            <div className="space-y-6">
-              {accuracyMetrics.map((metric) => (
-                <div key={metric.label}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[12px] text-text-secondary">{metric.label}</span>
-                    <span className="text-[13px] font-bold text-text-primary">{metric.value}%</span>
+          {/* AI Accuracy */}
+          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>AI Accuracy</h3>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 24 }}>Model performance benchmarks</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              {accuracyMetrics.map((m) => (
+                <div key={m.label}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13 }}>
+                    <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>{m.label}</span>
+                    <span style={{ fontWeight: 800, color: "var(--text-primary)" }}>{m.value}%</span>
                   </div>
-                  <div className="h-1.5 bg-bg-elevated rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${metric.value}%`, background: metric.color }}
-                    />
+                  <div style={{ height: 6, background: "var(--bg-elevated)", borderRadius: 100, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 100, width: `${m.value}%`, background: m.color, transition: "width 1s ease" }} />
                   </div>
                 </div>
               ))}

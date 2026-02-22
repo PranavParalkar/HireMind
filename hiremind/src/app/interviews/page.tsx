@@ -2,33 +2,15 @@
 
 import React from "react";
 import Header from "@/components/layout/Header";
-import Badge from "@/components/ui/Badge";
-import {
-  Star,
-  Sparkles,
-  CalendarCheck,
-  Video,
-  MessageSquare,
-  CheckCircle2,
-  Clock,
-  XCircle,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import { Star, Sparkles, CalendarCheck, Video, MessageSquare, CheckCircle2 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { interviews } from "@/lib/mockData";
 
-const typeColors: Record<string, "violet" | "cyan" | "emerald" | "amber"> = {
-  technical: "cyan",
-  behavioral: "violet",
-  cultural: "emerald",
-  final: "amber",
+const typeColors: Record<string, { bg: string; text: string }> = {
+  technical: { bg: "rgba(34,211,238,0.12)", text: "#22d3ee" },
+  behavioral: { bg: "rgba(139,92,246,0.12)", text: "#a78bfa" },
+  cultural: { bg: "rgba(52,211,153,0.12)", text: "#34d399" },
+  final: { bg: "rgba(251,191,36,0.12)", text: "#fbbf24" },
 };
 
 const ratingData = [
@@ -46,110 +28,84 @@ export default function InterviewsPage() {
   return (
     <>
       <Header title="Interviews" subtitle={`${interviews.length} total interviews`} />
-      <main className="p-8 space-y-8">
-        {/* Quick stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="card p-5 flex items-center gap-4">
-            <div className="w-9 h-9 rounded-lg bg-accent-blue/10 flex items-center justify-center">
-              <CalendarCheck size={16} className="text-accent-blue" />
-            </div>
-            <div>
-              <div className="text-[22px] font-bold text-text-primary">{scheduled.length}</div>
-              <div className="text-[11px] text-text-muted">Upcoming</div>
-            </div>
-          </div>
-          <div className="card p-5 flex items-center gap-4">
-            <div className="w-9 h-9 rounded-lg bg-accent-emerald/10 flex items-center justify-center">
-              <CheckCircle2 size={16} className="text-accent-emerald" />
-            </div>
-            <div>
-              <div className="text-[22px] font-bold text-text-primary">{completed.length}</div>
-              <div className="text-[11px] text-text-muted">Completed</div>
-            </div>
-          </div>
-          <div className="card p-5 flex items-center gap-4">
-            <div className="w-9 h-9 rounded-lg bg-accent-amber/10 flex items-center justify-center">
-              <Star size={16} className="text-accent-amber" />
-            </div>
-            <div>
-              <div className="text-[22px] font-bold text-text-primary">
-                {completed.length > 0
-                  ? (completed.reduce((sum, i) => sum + (i.rating || 0), 0) / completed.length).toFixed(1)
-                  : "—"}
+      <main style={{ padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+
+        {/* Stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+          {[
+            { label: "Upcoming", value: scheduled.length, color: "#60a5fa", icon: <CalendarCheck size={20} /> },
+            { label: "Completed", value: completed.length, color: "#34d399", icon: <CheckCircle2 size={20} /> },
+            { label: "Avg. Rating", value: completed.length > 0 ? (completed.reduce((s, i) => s + (i.rating || 0), 0) / completed.length).toFixed(1) : "—", color: "#fbbf24", icon: <Star size={20} /> },
+          ].map((s) => (
+            <div key={s.label} style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", background: `${s.color}15`, color: s.color }}>
+                {s.icon}
               </div>
-              <div className="text-[11px] text-text-muted">Avg. Rating</div>
+              <div>
+                <div style={{ fontSize: 26, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{s.label}</div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Interview Schedule */}
-          <div className="lg:col-span-2 space-y-4">
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 16 }}>
+          {/* Left column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {/* Upcoming */}
-            <div className="card p-6">
-              <h2 className="text-[15px] font-semibold text-text-primary mb-4 flex items-center gap-2">
-                <Video size={16} className="text-accent-violet-light" />
-                Upcoming Interviews
-              </h2>
-              <div className="space-y-2.5">
-                {scheduled.map((interview) => (
-                  <div
-                    key={interview.id}
-                    className="flex items-center gap-4 p-3.5 rounded-lg bg-bg-primary border border-border-subtle hover:border-border-default transition-colors"
-                  >
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shrink-0 bg-accent-violet">
-                      {interview.candidateAvatar}
+            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+                <Video size={18} color="#a78bfa" /> Upcoming Interviews
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {scheduled.map((iv) => (
+                  <div key={iv.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: 14, borderRadius: 12, background: "var(--bg-primary)", border: "1px solid var(--border-subtle)" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, background: "#8b5cf6" }}>
+                      {iv.candidateAvatar}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[13px] font-medium text-text-primary">{interview.candidateName}</h3>
-                      <p className="text-[11px] text-text-muted">{interview.role}</p>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>{iv.candidateName}</div>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{iv.role}</div>
                     </div>
-                    <div className="text-right shrink-0 hidden sm:block">
-                      <p className="text-[12px] text-text-primary font-medium">{interview.date.split("-").slice(1).join("/")}</p>
-                      <p className="text-[10px] text-text-muted">{interview.time}</p>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>{iv.date.split("-").slice(1).join("/")}</div>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{iv.time}</div>
                     </div>
-                    <Badge label={interview.type} variant={typeColors[interview.type]} />
+                    <span style={{ fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: typeColors[iv.type].bg, color: typeColors[iv.type].text }}>
+                      {iv.type}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Completed with AI Insights */}
-            <div className="card p-6">
-              <h2 className="text-[15px] font-semibold text-text-primary mb-4 flex items-center gap-2">
-                <MessageSquare size={16} className="text-accent-cyan" />
-                AI Interview Insights
-              </h2>
-              <div className="space-y-3">
-                {completed.map((interview) => (
-                  <div key={interview.id} className="p-4 rounded-lg bg-bg-primary border border-border-subtle">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-semibold text-white shrink-0 bg-accent-emerald">
-                        {interview.candidateAvatar}
+            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+                <MessageSquare size={18} color="#22d3ee" /> AI Interview Insights
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {completed.map((iv) => (
+                  <div key={iv.id} style={{ padding: 16, borderRadius: 12, background: "var(--bg-primary)", border: "1px solid var(--border-subtle)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0, background: "#34d399" }}>
+                        {iv.candidateAvatar}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-[13px] font-medium text-text-primary">{interview.candidateName}</h3>
-                        <p className="text-[10px] text-text-muted">{interview.role} · {interview.date.split("-").slice(1).join("/")}</p>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>{iv.candidateName}</div>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{iv.role}</div>
                       </div>
-                      <div className="flex items-center gap-0.5">
+                      <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            size={12}
-                            className={
-                              i < Math.floor(interview.rating || 0)
-                                ? "text-accent-amber fill-accent-amber"
-                                : "text-text-muted/30"
-                            }
-                          />
+                          <Star key={i} size={14} style={{ color: i < Math.floor(iv.rating || 0) ? "#fbbf24" : "var(--text-muted)", fill: i < Math.floor(iv.rating || 0) ? "#fbbf24" : "none" }} />
                         ))}
-                        <span className="text-[12px] font-bold text-text-primary ml-1.5">{interview.rating}</span>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: "var(--text-primary)", marginLeft: 6 }}>{iv.rating}</span>
                       </div>
                     </div>
-                    {interview.aiInsight && (
-                      <div className="flex gap-2 p-3 rounded-md bg-accent-violet-dim border border-accent-violet/8">
-                        <Sparkles size={13} className="text-accent-violet-light shrink-0 mt-0.5" />
-                        <p className="text-[11px] text-text-secondary leading-relaxed">{interview.aiInsight}</p>
+                    {iv.aiInsight && (
+                      <div style={{ display: "flex", gap: 8, padding: 12, borderRadius: 10, background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.08)" }}>
+                        <Sparkles size={14} color="#a78bfa" style={{ flexShrink: 0, marginTop: 1 }} />
+                        <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6 }}>{iv.aiInsight}</p>
                       </div>
                     )}
                   </div>
@@ -158,69 +114,40 @@ export default function InterviewsPage() {
             </div>
           </div>
 
-          {/* Right: Feedback Analytics */}
-          <div className="space-y-4">
-            <div className="card p-6">
-              <h2 className="text-[15px] font-semibold text-text-primary mb-1">Feedback Analytics</h2>
-              <p className="text-[11px] text-text-muted mb-5">Average scores by category</p>
-              <div className="h-[250px]">
+          {/* Right column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {/* Feedback Analytics */}
+            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>Feedback Analytics</h3>
+              <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 20 }}>Average scores by category</p>
+              <div style={{ height: 260 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={ratingData} layout="vertical" barSize={10}>
+                  <BarChart data={ratingData} layout="vertical" barSize={12}>
                     <CartesianGrid stroke="rgba(255,255,255,0.03)" horizontal={false} />
-                    <XAxis
-                      type="number"
-                      domain={[0, 5]}
-                      tick={{ fill: "#55555f", fontSize: 10 }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="name"
-                      tick={{ fill: "#8a8a98", fontSize: 11 }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={100}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        background: "#111116",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        borderRadius: "10px",
-                        color: "#f0f0f3",
-                        fontSize: "12px",
-                      }}
-                    />
-                    <Bar dataKey="score" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                    <XAxis type="number" domain={[0, 5]} tick={{ fill: "#55555f", fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fill: "#8a8a98", fontSize: 11 }} axisLine={false} tickLine={false} width={105} />
+                    <Tooltip contentStyle={{ background: "#111116", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#f0f0f3", fontSize: 12 }} />
+                    <Bar dataKey="score" fill="#8b5cf6" radius={[0, 6, 6, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div className="card p-6">
-              <h2 className="text-[13px] font-semibold text-text-primary mb-4">Interview Types</h2>
-              <div className="space-y-3">
+            {/* Interview Types */}
+            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: 16, padding: 24 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 16 }}>Interview Types</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {(["technical", "behavioral", "cultural", "final"] as const).map((type) => {
                   const count = interviews.filter((i) => i.type === type).length;
-                  const percentage = (count / interviews.length) * 100;
+                  const pct = (count / interviews.length) * 100;
                   return (
                     <div key={type}>
-                      <div className="flex items-center justify-between text-[11px] mb-1.5">
-                        <span className="text-text-secondary capitalize">{type}</span>
-                        <span className="font-medium text-text-primary">{count}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 6 }}>
+                        <span style={{ color: "var(--text-secondary)", textTransform: "capitalize", fontWeight: 500 }}>{type}</span>
+                        <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{count}</span>
                       </div>
-                      <div className="h-1 bg-bg-elevated rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${percentage}%`,
-                            background:
-                              type === "technical" ? "#22d3ee"
-                              : type === "behavioral" ? "#8b5cf6"
-                              : type === "cultural" ? "#34d399"
-                              : "#fbbf24",
-                          }}
-                        />
+                      <div style={{ height: 5, background: "var(--bg-elevated)", borderRadius: 100, overflow: "hidden" }}>
+                        <div style={{ height: "100%", borderRadius: 100, width: `${pct}%`, background: typeColors[type].text }} />
                       </div>
                     </div>
                   );

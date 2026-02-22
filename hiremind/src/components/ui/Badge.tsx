@@ -1,29 +1,37 @@
+"use client";
+
 import React from "react";
 
 interface BadgeProps {
-  label: string;
-  variant?: "violet" | "cyan" | "emerald" | "amber" | "rose" | "blue" | "default";
-  size?: "sm" | "md";
+  children: React.ReactNode;
+  variant?: "blue" | "violet" | "emerald" | "amber" | "rose" | "cyan" | "default";
 }
 
-const variantStyles: Record<string, string> = {
-  violet: "bg-accent-violet/10 text-accent-violet-light border-accent-violet/15",
-  cyan: "bg-accent-cyan/10 text-accent-cyan border-accent-cyan/15",
-  emerald: "bg-accent-emerald/10 text-accent-emerald border-accent-emerald/15",
-  amber: "bg-accent-amber/10 text-accent-amber border-accent-amber/15",
-  rose: "bg-accent-rose/10 text-accent-rose border-accent-rose/15",
-  blue: "bg-accent-blue/10 text-accent-blue border-accent-blue/15",
-  default: "bg-bg-elevated text-text-secondary border-border-default",
+const colors: Record<string, { bg: string; text: string }> = {
+  blue: { bg: "rgba(96,165,250,0.12)", text: "#60a5fa" },
+  violet: { bg: "rgba(139,92,246,0.12)", text: "#a78bfa" },
+  emerald: { bg: "rgba(52,211,153,0.12)", text: "#34d399" },
+  amber: { bg: "rgba(251,191,36,0.12)", text: "#fbbf24" },
+  rose: { bg: "rgba(251,113,133,0.12)", text: "#fb7185" },
+  cyan: { bg: "rgba(34,211,238,0.12)", text: "#22d3ee" },
+  default: { bg: "var(--bg-elevated)", text: "var(--text-secondary)" },
 };
 
-export default function Badge({ label, variant = "default", size = "sm" }: BadgeProps) {
+export default function Badge({ children, variant = "default" }: BadgeProps) {
+  const c = colors[variant];
   return (
     <span
-      className={`inline-flex items-center font-medium border rounded-md ${variantStyles[variant]} ${
-        size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-0.5 text-[12px]"
-      }`}
+      style={{
+        fontSize: 11,
+        fontWeight: 600,
+        padding: "3px 10px",
+        borderRadius: 6,
+        background: c.bg,
+        color: c.text,
+        display: "inline-block",
+      }}
     >
-      {label}
+      {children}
     </span>
   );
 }
