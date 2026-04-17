@@ -1,0 +1,26 @@
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+pydantic==2.6.1
+pydantic-settings==2.2.1
+sqlalchemy==2.0.27
+psycopg2-binary==2.9.9
+python-dotenv==1.0.1
+
+# Resume parsing
+pdfplumber==0.10.4
+PyMuPDF==1.23.26
+python-docx==1.1.0
+
+# NLP & Embeddings
+spacy==3.7.4
+sentence-transformers==2.5.1
+scikit-learn==1.4.1.post1
+numpy==1.26.4
+
+# Background jobs (optional)
+redis==5.0.1
+rq==1.16.1
+
+# Logging
+loguru==0.7.2
