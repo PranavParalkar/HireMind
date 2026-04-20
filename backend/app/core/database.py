@@ -23,12 +23,14 @@ def get_engine() -> Engine:
     """Create (or return cached) SQLAlchemy engine."""
     global _engine, _SessionLocal
     if _engine is None:
-        _engine = create_engine(
-            settings.DATABASE_URL,
-            pool_pre_ping=True,
-            pool_size=10,
-            max_overflow=20,
-        )
+        is_sqlite = settings.DATABASE_URL.startswith("sqlite")
+        kwargs = {"pool_pre_ping": True}
+        if is_sqlite:
+            kwargs["connect_args"] = {"check_same_thread": False}
+        else:
+            kwargs["pool_size"] = 10
+            kwargs["max_overflow"] = 20
+        _engine = create_engine(settings.DATABASE_URL, **kwargs)
         _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
     return _engine
 

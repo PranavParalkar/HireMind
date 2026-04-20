@@ -6,14 +6,14 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 interface StatCardProps {
   title: string;
   value: string | number;
-  trend: number;
+  trend?: number;
   trendLabel?: string;
   icon: React.ReactNode;
   color: string;
 }
 
 export default function StatCard({ title, value, trend, trendLabel, icon, color }: StatCardProps) {
-  const isPositive = trend >= 0;
+  const isPositive = (trend ?? 0) >= 0;
 
   return (
     <div
@@ -43,25 +43,27 @@ export default function StatCard({ title, value, trend, trendLabel, icon, color 
         <div style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6, fontWeight: 500 }}>
           {title}
         </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-            fontSize: 12,
-            fontWeight: 600,
-            marginTop: 8,
-            color: isPositive ? "var(--accent-emerald)" : "var(--accent-rose)",
-          }}
-        >
-          {isPositive ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
-          {isPositive ? "+" : ""}{trend}%
-          {trendLabel && (
-            <span style={{ color: "var(--text-muted)", fontWeight: 400, marginLeft: 2 }}>
-              {trendLabel}
-            </span>
-          )}
-        </div>
+        {trend !== undefined && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 12,
+              fontWeight: 600,
+              marginTop: 8,
+              color: isPositive ? "var(--accent-emerald)" : "var(--accent-rose)",
+            }}
+          >
+            {isPositive ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+            {isPositive ? "+" : ""}{trend}%
+            {trendLabel && (
+              <span style={{ color: "var(--text-muted)", fontWeight: 400, marginLeft: 2 }}>
+                {trendLabel}
+              </span>
+            )}
+          </div>
+        )}
       </div>
       <div
         style={{

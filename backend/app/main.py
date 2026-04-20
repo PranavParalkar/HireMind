@@ -10,14 +10,17 @@ from app import __version__
 from app.core.config import settings
 from app.core.database import init_db
 from app.routes import health, ranking, resume, scoring
+from app.routes.auth import router as auth_router
+from app.routes.jobs import router as jobs_router
+from app.routes.candidates import router as candidates_router
+from app.routes.interviews import router as interviews_router
+from app.routes.dashboard import router as dashboard_router
 from app.utils.logger import logger
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup and shutdown hooks."""
     logger.info(f"Starting {settings.APP_NAME} v{__version__} ({settings.APP_ENV})")
-    # Initialise DB tables (dev convenience - use Alembic in prod)
     try:
         init_db()
         logger.info("Database initialized.")
@@ -34,18 +37,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS (allow frontend to call the API)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------------------------------------------------------------------
-# Global exception handlers
-# ---------------------------------------------------------------------
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     logger.warning(f"Validation error on {request.url.path}: {exc.errors()}")
@@ -64,13 +64,18 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# ---------------------------------------------------------------------
-# Routers
-# ---------------------------------------------------------------------
+# Core AI routes
 app.include_router(health.router, prefix=settings.API_PREFIX)
 app.include_router(resume.router, prefix=settings.API_PREFIX)
 app.include_router(scoring.router, prefix=settings.API_PREFIX)
 app.include_router(ranking.router, prefix=settings.API_PREFIX)
+
+# Business logic routes
+app.include_router(auth_router, prefix=settings.API_PREFIX)
+app.include_router(jobs_router, prefix=settings.API_PREFIX)
+app.include_router(candidates_router, prefix=settings.API_PREFIX)
+app.include_router(interviews_router, prefix=settings.API_PREFIX)
+app.include_router(dashboard_router, prefix=settings.API_PREFIX)
 
 
 @app.get("/")
@@ -79,12 +84,6 @@ async def root():
         "app": settings.APP_NAME,
         "version": __version__,
         "docs": "/docs",
-        "endpoints": [
-            f"{settings.API_PREFIX}/health",
-            f"{settings.API_PREFIX}/resumes/upload-resume",
-            f"{settings.API_PREFIX}/scoring/analyze-fit",
-            f"{settings.API_PREFIX}/ranking/rank-candidates",
-        ],
     }
 
 

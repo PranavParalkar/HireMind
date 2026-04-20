@@ -1,0 +1,19 @@
+# IDE / tool state
+.claude/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python virtual envs
+venv/
+.venv/
+env/
+
+# Legacy nested layout (kept locally; repo uses flat backend/ + frontend/)
+HireMind/
+
+# Logs
+*.log
