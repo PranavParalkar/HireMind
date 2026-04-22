@@ -12,8 +12,5 @@ venv/
 .venv/
 env/
 
-# Legacy nested layout (kept locally; repo uses flat backend/ + frontend/)
-HireMind/
-
 # Logs
 *.log
