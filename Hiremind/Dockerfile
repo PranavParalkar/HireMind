@@ -23,7 +23,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./next.config.ts
 COPY --from=builder /app/seed.ts ./seed.ts
-COPY --from=builder /app/data ./data
+RUN mkdir -p /app/data
 
 EXPOSE 3000
 
